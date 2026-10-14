@@ -1,0 +1,608 @@
+<title>Sarkari Suchna</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='24' fill='%230f1f4d'/%3E%3Cpath d='M62 34C62 22 32 22 32 38C32 54 64 44 64 62C64 78 30 78 30 66' fill='none' stroke='%23ffffff' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='72' cy='22' r='7' fill='%23f97316'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Mukta:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: full-width navy hero with a faint Ashoka-wheel motif and a tricolour stripe, three stat tiles and the search box. Below it one column of vacancy cards, each with a coloured initials tile that matches its category. */
+:root {
+  --bg: #f5f6fb;
+  --surface: #ffffff;
+  --fg: #101a3d;
+  --muted: #586184;
+  --line: #e1e5f1;
+  --accent: #2b46c9;
+  --on-accent: #ffffff;
+
+  --hero: #0f1f4d;
+  --hero-fg: #ffffff;
+  --hero-muted: #b9c3e6;
+  --hero-line: rgba(255, 255, 255, 0.16);
+  --saffron: #ff9a3c;
+  --mint: #55e0a4;
+  --coral: #ff8b8b;
+
+  --open: #0b7a4b;
+  --open-bg: #dff5ea;
+  --soon: #a14a00;
+  --soon-bg: #ffe9cf;
+  --closed: #5a6280;
+  --closed-bg: #e9ebf3;
+
+  --rail-bg: #dbe7ff;  --rail-fg: #1c4ed8;
+  --bank-bg: #d5f5e8;  --bank-fg: #047857;
+  --ssc-bg: #ebe2ff;   --ssc-fg: #6d28d9;
+  --state-bg: #ffe6d3; --state-fg: #c2410c;
+  --teach-bg: #ffdfee; --teach-fg: #be185d;
+  --psu-bg: #d3f3fa;   --psu-fg: #0e7490;
+
+  --display: 'Bricolage Grotesque', 'Mukta', system-ui, sans-serif;
+  --body: 'Mukta', 'Noto Sans Devanagari', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a1029;
+    --surface: #131a38;
+    --fg: #eaeefc;
+    --muted: #9ba6cc;
+    --line: #252e55;
+    --accent: #8ea4ff;
+    --on-accent: #0a1029;
+    --hero: #0c1740;
+    --open: #6fe0aa;
+    --open-bg: #12362a;
+    --soon: #ffc27a;
+    --soon-bg: #3b2a10;
+    --closed: #9ba4c0;
+    --closed-bg: #222a4a;
+    --rail-bg: #16306b;  --rail-fg: #9dbcff;
+    --bank-bg: #0f3a2c;  --bank-fg: #6fe0b0;
+    --ssc-bg: #33236b;   --ssc-fg: #c7b2ff;
+    --state-bg: #4a2410; --state-fg: #ffb98a;
+    --teach-bg: #4d1634; --teach-fg: #ff9fcb;
+    --psu-bg: #0b3a47;   --psu-fg: #74dcf3;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a1029;
+  --surface: #131a38;
+  --fg: #eaeefc;
+  --muted: #9ba6cc;
+  --line: #252e55;
+  --accent: #8ea4ff;
+  --on-accent: #0a1029;
+  --hero: #0c1740;
+  --open: #6fe0aa;
+  --open-bg: #12362a;
+  --soon: #ffc27a;
+  --soon-bg: #3b2a10;
+  --closed: #9ba4c0;
+  --closed-bg: #222a4a;
+  --rail-bg: #16306b;  --rail-fg: #9dbcff;
+  --bank-bg: #0f3a2c;  --bank-fg: #6fe0b0;
+  --ssc-bg: #33236b;   --ssc-fg: #c7b2ff;
+  --state-bg: #4a2410; --state-fg: #ffb98a;
+  --teach-bg: #4d1634; --teach-fg: #ff9fcb;
+  --psu-bg: #0b3a47;   --psu-fg: #74dcf3;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 0;
+}
+.inner {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--hero);
+  color: var(--hero-fg);
+}
+.orb { position: absolute; border-radius: 50%; pointer-events: none; }
+.orb-a { right: -140px; top: -180px; width: 460px; height: 460px; background: rgba(249, 115, 22, 0.16); }
+.orb-b { left: 55%; bottom: -200px; width: 340px; height: 340px; background: rgba(85, 224, 164, 0.10); }
+.brand { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 28px; }
+.brand svg { flex: 0 0 auto; }
+.brand-name { font-family: var(--display); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1; }
+.brand-name span { color: var(--saffron); }
+.brand-hi { padding-left: 12px; border-left: 1px solid var(--hero-line); font-size: 0.9375rem; color: var(--hero-muted); }
+.hero h1 { max-width: 22ch; }
+.foot-brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 1.125rem; color: var(--fg); margin-top: 8px; }
+.hero-in { position: relative; z-index: 1; padding-block: 40px 28px; }
+.kicker {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--saffron);
+}
+h1 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 3.5rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+.lead { margin: 12px 0 0; max-width: 46ch; color: var(--hero-muted); font-size: 1.0625rem; }
+
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 24px; max-width: 620px; }
+.stat {
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--hero-line);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.stat b {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.stat span { font-size: 0.8125rem; color: var(--hero-muted); }
+.s1 b { color: var(--saffron); }
+.s2 b { color: var(--mint); }
+.s3 b { color: var(--coral); }
+
+.searchbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 0 16px;
+  min-height: 52px;
+  max-width: 620px;
+  background: var(--surface);
+  color: var(--fg);
+  border-radius: 12px;
+}
+.searchbox:focus-within { outline: 3px solid var(--saffron); outline-offset: 2px; }
+.searchbox svg { flex: 0 0 auto; color: var(--muted); }
+.searchbox input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 12px 0;
+}
+.searchbox input::placeholder { color: var(--muted); }
+
+/* ---------- main ---------- */
+.main { padding-block: 24px 40px; display: flex; flex-direction: column; gap: 18px; }
+
+.tools { display: flex; flex-direction: column; gap: 14px; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 16px;
+  min-height: 40px;
+  cursor: pointer;
+}
+.chip::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--t-fg);
+}
+.chip[data-cat="all"] { --t-bg: var(--fg); --t-fg: var(--bg); }
+.chip[data-cat="all"]::before { display: none; }
+.chip:hover { border-color: var(--t-fg); }
+.chip[aria-pressed="true"] { background: var(--t-bg); color: var(--t-fg); border-color: var(--t-fg); }
+.chip[data-cat="all"][aria-pressed="true"] { border-color: var(--fg); }
+.chip[data-cat="all"]:not([aria-pressed="true"]) { --t-fg: var(--fg); }
+
+[data-cat="rail"] { --t-bg: var(--rail-bg); --t-fg: var(--rail-fg); }
+[data-cat="bank"] { --t-bg: var(--bank-bg); --t-fg: var(--bank-fg); }
+[data-cat="ssc"] { --t-bg: var(--ssc-bg); --t-fg: var(--ssc-fg); }
+[data-cat="state"] { --t-bg: var(--state-bg); --t-fg: var(--state-fg); }
+[data-cat="teach"] { --t-bg: var(--teach-bg); --t-fg: var(--teach-fg); }
+[data-cat="psu"] { --t-bg: var(--psu-bg); --t-fg: var(--psu-fg); }
+
+.sw { display: inline-flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.9375rem; cursor: pointer; align-self: flex-start; min-height: 32px; }
+.sw input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 44px;
+  height: 26px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--line);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sw input::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s;
+}
+.sw input:checked { background: var(--accent); }
+.sw input:checked::after { transform: translateX(18px); }
+
+.chip:focus-visible, .link:focus-visible, summary:focus-visible, .sw input:focus-visible, .tg:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: start; }
+.sect, .empty { grid-column: 1 / -1; }
+.sect {
+  margin: 8px 0 0;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.job {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.job:hover { border-color: var(--t-fg); }
+.job[open] { border-color: var(--t-fg); }
+.job.closed { opacity: 0.8; }
+summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px 44px 16px 16px;
+  border-radius: 16px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: '';
+  position: absolute;
+  right: 20px;
+  top: 26px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform 0.15s;
+}
+.job[open] summary::after { transform: rotate(-135deg); top: 30px; }
+.tile {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--t-bg);
+  color: var(--t-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: -0.02em;
+  text-align: center;
+  line-height: 1.1;
+  overflow: hidden;
+}
+.main-col { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.main-col h2 { margin: 0; font-size: 1.1875rem; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.org { color: var(--muted); font-size: 0.9375rem; overflow-wrap: anywhere; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin-top: 8px; font-size: 0.875rem; color: var(--muted); }
+.meta b { color: var(--fg); font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pill { font-size: 0.8125rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
+.pill.open { color: var(--open); background: var(--open-bg); }
+.pill.soon { color: var(--soon); background: var(--soon-bg); }
+.pill.closed { color: var(--closed); background: var(--closed-bg); }
+
+.body { padding: 0 16px 18px 86px; display: flex; flex-direction: column; gap: 12px; font-size: 0.9375rem; }
+.body p { margin: 0; max-width: 60ch; }
+.links { display: flex; flex-wrap: wrap; gap: 8px; }
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--t-fg);
+  background: var(--t-bg);
+}
+.link.alt { background: transparent; border: 1.5px solid var(--line); color: var(--fg); }
+.link:hover { filter: brightness(0.97); }
+.src { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+.empty { padding: 28px 16px; text-align: center; color: var(--muted); border: 1.5px dashed var(--line); border-radius: 16px; }
+
+.tg {
+  display: none;
+  align-self: flex-start;
+  color: #1a1000;
+  background: var(--saffron);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 999px;
+}
+.tg.on { display: inline-block; }
+
+.foot { margin: 8px 0 0; font-size: 0.875rem; color: var(--muted); max-width: 64ch; }
+.foot b { color: var(--fg); }
+
+@media (min-width: 700px) {
+  .chips { flex-wrap: wrap; overflow-x: visible; }
+  h1 { font-size: 3.75rem; }
+  .hero-in { padding-block: 56px 36px; }
+  .lead { font-size: 1.1875rem; }
+}
+@media (min-width: 860px) {
+  .list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (pointer: coarse) {
+  .chip, .link { min-height: 44px; }
+}
+@media (max-width: 520px) {
+  h1 { font-size: 2.25rem; }
+  .hero-in { padding-block: 32px 24px; }
+  .stat b { font-size: 1.625rem; }
+  .stat { padding: 10px 12px; }
+  .body { padding: 0 16px 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .job, summary::after, .sw input, .sw input::after { transition: none; }
+}
+</style>
+
+<header class="hero">
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+  <div class="inner hero-in">
+    <div class="brand">
+      <svg width="48" height="48" viewBox="0 0 96 96" role="img" aria-label="Sarkari Suchna logo mark"><rect width="96" height="96" rx="24" fill="#ffffff"/><path d="M62 34 C62 22 32 22 32 38 C32 54 64 44 64 62 C64 78 30 78 30 66" fill="none" stroke="#0f1f4d" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="72" cy="22" r="7" fill="#f97316"/></svg>
+      <div class="brand-name">Sarkari <span>Suchna</span></div>
+      <div class="brand-hi" lang="hi">सरकारी सूचना</div>
+    </div>
+    <h1>Every government vacancy, in one place.</h1>
+    <p class="lead">Posts, last dates and official links at a glance.</p>
+    <div class="stats">
+      <div class="stat s1"><b id="sOpen">0</b><span>Open now</span></div>
+      <div class="stat s2"><b id="sPosts">0</b><span>Posts listed</span></div>
+      <div class="stat s3"><b id="sSoon">0</b><span>Closing in 3 days</span></div>
+    </div>
+    <label class="searchbox" for="q">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search SBI, IBPS, Goa, scientist..." autocomplete="off">
+    </label>
+  </div>
+</header>
+
+<main class="inner main">
+  <a class="tg" id="tg" href="#" target="_blank" rel="noopener">Get new vacancy alerts</a>
+
+  <section class="tools" aria-label="Filters">
+    <div class="chips" id="chips"></div>
+    <label class="sw"><input type="checkbox" id="onlyOpen"> Show open vacancies only</label>
+  </section>
+
+  <!-- AD SLOT: after you host this file on your own domain, paste your ad code here -->
+
+  <section class="list" id="list" aria-live="polite"></section>
+
+  <div class="foot-brand">
+    <svg width="32" height="32" viewBox="0 0 96 96" role="img" aria-label="Sarkari Suchna logo mark"><rect width="96" height="96" rx="24" style="fill: var(--fg)"/><path d="M62 34 C62 22 32 22 32 38 C32 54 64 44 64 62 C64 78 30 78 30 66" fill="none" style="stroke: var(--bg)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="72" cy="22" r="7" fill="#f97316"/></svg>
+    <span>Sarkari Suchna</span>
+  </div>
+  <p class="foot">
+    <b>Heads up:</b> this site is not affiliated with any government department or recruiting body. Details are taken from the official notifications. Always read the full notification on the official website before you apply, because dates and vacancy counts can change.
+    <br>Last updated: <span id="upd"></span>
+  </p>
+</main>
+
+<script>
+(function () {
+  /* ===== EDIT HERE ===== */
+  var CONFIG = {
+    updated: '2026-10-14',
+    telegramUrl: '' /* paste your Telegram or WhatsApp channel link here and the alert button will appear */
+  };
+
+  /* One line per vacancy. last = last date (YYYY-MM-DD). posts = null if not known. tag = short label for the tile. */
+  var JOBS = [
+    { title: 'RRB NTPC (Graduate level)', tag: 'RRB', org: 'Railway Recruitment Boards', cat: 'Railway', posts: 3548, last: '2026-11-06',
+      info: 'Posts include Chief Commercial cum Ticket Supervisor, Goods Train Manager, Junior Accounts Assistant cum Typist and Senior Clerk cum Typist. Applications opened on 8 October. The closing date is as reported in a Government of India news report, so confirm it in the official RRB notification.',
+      url: 'https://newsonair.gov.in/railway-recruitment-boards-announce-3548-graduate-level-vacancies-under-ntpc-recruitment-2026/', src: 'Government of India news report', official: 'https://www.rrbapply.gov.in' },
+    { title: 'Food Safety Officer, Goa', tag: 'GSSC', org: 'Goa Staff Selection Commission', cat: 'State', posts: 5, last: '2026-10-30',
+      info: 'Brief Advertisement No. 4 of 2026, dated 30 September 2026. Vacancies are tentative and exact numbers come in the detailed advertisement. Online applications only. The brief advertisement is partly unclear on dates, so confirm the closing date in the detailed advertisement.',
+      url: 'https://gssc.goa.gov.in/wp-content/uploads/2026/09/advertisement-no.-4-of-year-2026-brief-advertisement_compressed.pdf', src: 'Goa Staff Selection Commission', official: 'https://gssc.goa.gov.in' },
+    { title: 'Veterinary Assistant, Goa', tag: 'GSSC', org: 'Goa Staff Selection Commission', cat: 'State', posts: 27, last: '2026-10-30',
+      info: 'Brief Advertisement No. 4 of 2026, dated 30 September 2026. Vacancies are tentative and exact numbers come in the detailed advertisement. Online applications only. The brief advertisement is partly unclear on dates, so confirm the closing date in the detailed advertisement.',
+      url: 'https://gssc.goa.gov.in/wp-content/uploads/2026/09/advertisement-no.-4-of-year-2026-brief-advertisement_compressed.pdf', src: 'Goa Staff Selection Commission', official: 'https://gssc.goa.gov.in' },
+    { title: 'SBI Specialist Cadre Officer (contract)', tag: 'SBI', org: 'State Bank of India', cat: 'Bank', posts: null, last: '2026-10-16',
+      info: 'Advertisement No. CRPD/SCO/2026-27/20 for Dean, Faculty and Marketing Executive roles on contract basis. The number of vacancies is given in the advertisement.',
+      url: 'https://sbi.bank.in/documents/77530/57941334/16092026_ADV_CRPD_SCO_2026-27_20_SBIL.pdf/72f2a326-b338-3ea8-84d9-2fb56c3253a2?t=1789538665520', src: 'State Bank of India', official: 'https://sbi.bank.in/web/careers/current-openings' },
+    { title: 'IBPS Portal: Various Posts', tag: 'IBPS', org: 'IBPS registration portal', cat: 'Bank', posts: null, last: '2026-10-20',
+      info: 'Registration opened on 23 September 2026. The registration page does not name the recruiting organisation or the number of vacancies, so read the full notification on the portal before you apply.',
+      url: 'https://ibpsreg.ibps.in/ibpsvpspt26/', src: 'IBPS registration portal', official: 'https://www.ibps.in' },
+    { title: 'IBPS Portal: HR, Various Departments', tag: 'IBPS', org: 'IBPS registration portal', cat: 'Bank', posts: null, last: '2026-10-16',
+      info: 'Recruitment of Human Resource on regular basis for various departments. Registration opened on 4 September 2026. The page does not name the organisation or the number of vacancies, so read the full notification before you apply.',
+      url: 'https://ibpsreg.ibps.in/bonwejul26/', src: 'IBPS registration portal', official: 'https://www.ibps.in' },
+    { title: 'ICMR-NIE Scientific Positions', tag: 'ICMR', org: 'ICMR-NIE, Chennai', cat: 'Central', posts: 8, last: '2026-11-26',
+      info: 'Scientific positions in the School of Public Health. The ICMR page lists this date as Last/Interview Date, so read the advertisement to confirm the application deadline.',
+      url: 'https://www.icmr.gov.in/icmrobject/uploads/Recruitment/1791381044_icmr-ninadvertisementscientist-bcd.pdf', src: 'Indian Council of Medical Research', official: 'https://www.icmr.gov.in/employment-opportunities' },
+    { title: 'SSC CHSL 2026', tag: 'SSC', org: 'Staff Selection Commission', cat: 'SSC', posts: 2536, last: '2026-10-07',
+      info: 'Eligibility: Class 12 pass or equivalent (DEO posts in some ministries need Science with Mathematics). Age: 18 to 27 years as on 1 August 2026. The post count is tentative. Applications are closed, but the form correction window runs from 14 to 16 October 2026, until 11 PM.',
+      url: 'https://ssc.gov.in/api/attachment/uploads/masterData/NoticeBoards/Notice_of_adv_chsl_2026.pdf', src: 'Staff Selection Commission notice', official: 'https://ssc.gov.in' },
+    { title: 'LDC / Recovery Clerk, Goa', tag: 'GSSC', org: 'Goa Staff Selection Commission', cat: 'State', posts: 197, last: '2026-10-02',
+      info: 'Advertisement No. 3 of 2026. Also advertised: Junior Assistant (13), Data Entry Operator (2) and Desktop Publishing Operator (3). Vacancies are tentative.',
+      url: 'https://gssc.goa.gov.in/wp-content/uploads/2026/09/advertisement-no.-3-of-year-2026-brief-advertisement-dated-04.09.2026_compressed.pdf', src: 'Goa Staff Selection Commission', official: 'https://gssc.goa.gov.in' },
+    { title: 'Assistant Provident Fund Commissioner', tag: 'UPSC', org: 'UPSC for EPFO, Ministry of Labour and Employment', cat: 'Central', posts: 80, last: '2026-09-11',
+      info: 'Special Advertisement No. 52/2026. Applications were open from 22 August to 11 September 2026.',
+      url: 'https://www.upsc.gov.in/sites/default/files/AdvtNo-52-2026-Special-Engl-210826.pdf', src: 'Union Public Service Commission', official: 'https://upsconline.nic.in/ora/' },
+    { title: 'IBPS RRB XV Officers (Scale I, II, III)', tag: 'IBPS', org: 'IBPS, Regional Rural Banks', cat: 'Bank', posts: null, last: '2026-09-27',
+      info: 'Common Recruitment Process for Group A Officers. Registration ran from 1 to 27 September 2026. A candidate can apply for only one Officer post (Scale I, II or III).',
+      url: 'https://ibpsreg.ibps.in/rrbxvaug26/', src: 'IBPS registration portal', official: 'https://www.ibps.in' }
+  ];
+  /* ===== END OF EDIT AREA ===== */
+
+  var CATKEY = { Railway: 'rail', Bank: 'bank', SSC: 'ssc', State: 'state', Teaching: 'teach', PSU: 'psu', Central: 'psu' };
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function parse(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function today0() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function fmt(s) { var d = parse(s); return d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear(); }
+  function daysLeft(j) { return Math.round((parse(j.last) - today0()) / 86400000); }
+  function status(j) {
+    var d = daysLeft(j);
+    if (d < 0) return { k: 'closed', t: 'Closed' };
+    if (d === 0) return { k: 'soon', t: 'Last day today' };
+    if (d <= 3) return { k: 'soon', t: d + (d === 1 ? ' day left' : ' days left') };
+    return { k: 'open', t: d + ' days left' };
+  }
+
+  var els = {
+    q: document.getElementById('q'),
+    chips: document.getElementById('chips'),
+    only: document.getElementById('onlyOpen'),
+    list: document.getElementById('list'),
+    tg: document.getElementById('tg'),
+    upd: document.getElementById('upd'),
+    sOpen: document.getElementById('sOpen'),
+    sPosts: document.getElementById('sPosts'),
+    sSoon: document.getElementById('sSoon')
+  };
+
+  var cats = ['All'];
+  JOBS.forEach(function (j) { if (cats.indexOf(j.cat) < 0) cats.push(j.cat); });
+  var activeCat = 'All';
+
+  function renderChips() {
+    els.chips.innerHTML = cats.map(function (c) {
+      var key = c === 'All' ? 'all' : (CATKEY[c] || 'psu');
+      return '<button type="button" class="chip" data-c="' + esc(c) + '" data-cat="' + key + '" aria-pressed="' + (c === activeCat) + '">' + esc(c) + '</button>';
+    }).join('');
+  }
+
+  function rowHtml(j) {
+    var st = status(j);
+    var key = CATKEY[j.cat] || 'psu';
+    var posts = j.posts == null ? 'Posts not stated' : '<b>' + j.posts.toLocaleString('en-IN') + '</b> posts';
+    var info = j.info || 'Check the official notification for eligibility and age limit.';
+    var links = '<a class="link" href="' + esc(j.url) + '" target="_blank" rel="noopener">Full details</a>';
+    if (j.official) links += '<a class="link alt" href="' + esc(j.official) + '" target="_blank" rel="noopener">Official site</a>';
+    return '<details class="job' + (st.k === 'closed' ? ' closed' : '') + '" data-cat="' + key + '">' +
+      '<summary>' +
+        '<div class="tile" aria-hidden="true">' + esc(j.tag) + '</div>' +
+        '<div class="main-col">' +
+          '<h2>' + esc(j.title) + '</h2>' +
+          '<div class="org">' + esc(j.org) + '</div>' +
+          '<div class="meta"><span class="pill ' + st.k + '">' + st.t + '</span>' +
+          '<span>' + posts + '</span>' +
+          '<span>Last date <b>' + fmt(j.last) + '</b></span></div>' +
+        '</div>' +
+      '</summary>' +
+      '<div class="body"><p>' + esc(info) + '</p>' +
+      '<div class="links">' + links + '</div>' +
+      '<div class="src">Source: ' + esc(j.src) + '</div></div>' +
+    '</details>';
+  }
+
+  function render() {
+    var q = els.q.value.trim().toLowerCase();
+    var onlyOpen = els.only.checked;
+    var shown = JOBS.filter(function (j) {
+      if (activeCat !== 'All' && j.cat !== activeCat) return false;
+      if (onlyOpen && daysLeft(j) < 0) return false;
+      if (q && (j.title + ' ' + j.org + ' ' + j.cat).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    var open = shown.filter(function (j) { return daysLeft(j) >= 0; })
+      .sort(function (a, b) { return daysLeft(a) - daysLeft(b); });
+    var closed = shown.filter(function (j) { return daysLeft(j) < 0; })
+      .sort(function (a, b) { return daysLeft(b) - daysLeft(a); });
+
+    var html = '';
+    if (open.length) html += '<h3 class="sect">Open now · ending soonest first</h3>' + open.map(rowHtml).join('');
+    if (closed.length) html += '<h3 class="sect">Closed</h3>' + closed.map(rowHtml).join('');
+    if (!html) html = '<div class="empty">No vacancies match. Try another word or clear the filters.</div>';
+    els.list.innerHTML = html;
+  }
+
+  function renderStats() {
+    var open = JOBS.filter(function (j) { return daysLeft(j) >= 0; });
+    var soon = open.filter(function (j) { return daysLeft(j) <= 3; });
+    var posts = open.reduce(function (s, j) { return s + (j.posts || 0); }, 0);
+    els.sOpen.textContent = open.length;
+    els.sPosts.textContent = posts.toLocaleString('en-IN');
+    els.sSoon.textContent = soon.length;
+  }
+
+  els.chips.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip');
+    if (!b) return;
+    activeCat = b.getAttribute('data-c');
+    renderChips();
+    render();
+  });
+  els.q.addEventListener('input', render);
+  els.only.addEventListener('change', render);
+
+  if (CONFIG.telegramUrl) {
+    els.tg.href = CONFIG.telegramUrl;
+    els.tg.className = 'tg on';
+  }
+  els.upd.textContent = fmt(CONFIG.updated);
+
+  renderChips();
+  renderStats();
+  render();
+})();
+</script>
